@@ -1,8 +1,9 @@
 import React from 'react'
-import { ItemQuestion } from '../ItemQuestion/ItemQuestion'
 import styles from './PopularQuestionsContainer.module.scss'
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import DatePicker from 'react-datepicker'
+import { ItemQuestion } from '../ItemQuestion/ItemQuestion'
+import { Button } from '../Button/Button'
 
 export const PopularQuestionsContainer = () => {
   const [startDate, setStartDate] = React.useState(new Date(2018, 0, 1))
@@ -24,6 +25,9 @@ export const PopularQuestionsContainer = () => {
               setStartDate(date)
             }}
           />
+          <Button className={styles.buttonFind} appearance="transparent">
+            найти
+          </Button>
         </span>
         &nbsp;
       </div>
