@@ -1,0 +1,48 @@
+.root {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 7px;
+  border: 2px solid var(--color-primary);
+  border-radius: 10px;
+  padding: 10px;
+  color: var(--color-gray);
+  transition: var(--transition);
+
+  &.isAnswered {
+    background-color: var(--color-blue);
+    border: 2px solid var(--color-blue);
+  }
+
+  &:hover {
+    background-color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+  }
+}
+
+.rate {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: var(--color-gray);
+  color: var(--color-white);
+}
+
+.arrows {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 3px;
+
+  & svg {
+    cursor: pointer;
+    transition: var(--transition);
+
+    &:hover {
+      fill: var(--color-gray);
+    }
+  }
+}
+
+.arrowUp {
+  transform: rotate(180deg);
+}

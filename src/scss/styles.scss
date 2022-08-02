@@ -1,9 +1,12 @@
+@use './variables.scss';
+
 *,
 *:after,
 *:before {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
 }
 
 input,
@@ -20,7 +23,8 @@ body {
   min-height: 100vh;
   scroll-behavior: smooth;
   text-rendering: optimizeSpeed;
-  line-height: 1.5;
+  line-height: 1.3;
+  padding: 15px;
 }
 
 ul,

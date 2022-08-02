@@ -23,7 +23,7 @@ module.exports = {
       {
         // для модульных изолированных стилей с хешем
         test: /\.module\.s(a|c)ss$/,
-        // сначала sass/scss преобразуется в css, затем css в js, и потом подключение в html в теге style
+        // сначала sass/scss преобразуется в css, затем css в js, и потом подключение в html в теге link
         use: [
           MiniCssExtractPlugin.loader,
           {
@@ -48,6 +48,11 @@ module.exports = {
           'sass-loader',
           'postcss-loader',
         ],
+      },
+      {
+        // для css стилей
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
       {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,

@@ -1,0 +1,35 @@
+.root {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 15px;
+  box-shadow: var(--box-shadow);
+  border-radius: 5px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 500;
+  color: var(--color-primary);
+
+  & > span {
+    & > div {
+      display: inline-block;
+      width: auto;
+      margin-left: 10px;
+    }
+  }
+}
+
+.inputDate {
+  border: 1px solid var(--color-primary);
+  border-radius: 5px;
+  color: var(--color-primary);
+  padding-left: 10px;
+}
+
+.list {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+}
