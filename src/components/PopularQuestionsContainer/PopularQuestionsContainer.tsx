@@ -56,7 +56,6 @@ export const PopularQuestionsContainer = () => {
           selected={new Date(startDate)}
           onChange={(dateChoose: Date) => {
             changeDate(dateChoose)
-            // setStartDate(dateChoose)
           }}
         />
         {dateIsChange && (

@@ -1,5 +1,4 @@
-// import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit'
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 
 export enum statusEnum {
@@ -15,7 +14,7 @@ interface IOwner {
 
 export interface IItem {
   title: string
-  question_id: string
+  question_id: number
   score: number
   view_count: number
   is_answered: boolean
@@ -45,7 +44,22 @@ export const fetchQiestions = createAsyncThunk<IItem[], number>(
 const questionsSlice = createSlice({
   name: 'questionsSlice',
   initialState,
-  reducers: {},
+  reducers: {
+    increment(state, action: PayloadAction<number>) {
+      const item = state.items.find(
+        (item) => item.question_id === action.payload
+      )
+
+      item ? item.score++ : ''
+    },
+    decrement(state, action: PayloadAction<number>) {
+      const item = state.items.find(
+        (item) => item.question_id === action.payload
+      )
+
+      item ? item.score-- : ''
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(fetchQiestions.pending, (state) => {
       state.items = []
@@ -62,6 +76,6 @@ const questionsSlice = createSlice({
   },
 })
 
-// export const { changeDate } = questionsSlice.actions
+export const { increment, decrement } = questionsSlice.actions
 
 export default questionsSlice.reducer
