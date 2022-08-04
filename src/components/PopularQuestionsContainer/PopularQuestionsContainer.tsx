@@ -4,13 +4,21 @@ import 'react-datepicker/dist/react-datepicker.css'
 import DatePicker from 'react-datepicker'
 import { ItemQuestion } from '../ItemQuestion/ItemQuestion'
 import { Button } from '../Button/Button'
-import { fetchQiestions, statusEnum } from '../../redux/slices/questionsSlice'
+import {
+  fetchQiestions,
+  statusEnum,
+  IItem,
+} from '../../redux/slices/questionsSlice'
 
 import type { AppDispatch, RootState } from '../../redux/store'
 import { useSelector, useDispatch } from 'react-redux'
 import { ItemQuestionSkeleton } from '../ItemQuestion/ItemQuestion.skeleton'
 
+import update from 'immutability-helper'
+
 export const PopularQuestionsContainer = () => {
+  const [cards, setCards] = React.useState<IItem[]>([])
+
   const [startDate, setStartDate] = React.useState(new Date(2018, 0, 1))
   const [dateIsChange, setDateIsChange] = React.useState<boolean>(false)
   const { items, status } = useSelector(
@@ -18,10 +26,13 @@ export const PopularQuestionsContainer = () => {
   )
   const dispatch = useDispatch<AppDispatch>()
 
+  React.useEffect(() => {
+    setCards(items)
+  }, [items])
+
   const changeDate = (currentDate: Date) => {
     setStartDate(currentDate)
     setDateIsChange(true)
-    console.log(currentDate)
   }
 
   const searchNewDate = (searchDate: Date) => {
@@ -38,6 +49,32 @@ export const PopularQuestionsContainer = () => {
       fetchQiestions(
         Number(new Date(startDate).getTime().toString().slice(0, -3))
       )
+    )
+    setCards(items)
+  }, [])
+
+  const moveCard = React.useCallback(
+    (dragIndex: number, hoverIndex: number) => {
+      setCards((prevCards: IItem[]) =>
+        update(prevCards, {
+          $splice: [
+            [dragIndex, 1],
+            [hoverIndex, 0, prevCards[dragIndex] as IItem],
+          ],
+        })
+      )
+    },
+    []
+  )
+
+  const renderCard = React.useCallback((question: IItem, index: number) => {
+    return (
+      <ItemQuestion
+        key={question.question_id}
+        {...question}
+        moveCard={moveCard}
+        index={index}
+      />
     )
   }, [])
 
@@ -73,10 +110,9 @@ export const PopularQuestionsContainer = () => {
           [...new Array(5)].map((_, index) => (
             <ItemQuestionSkeleton key={index} viewBox="0 0 550 75" />
           ))}
-        {status === statusEnum.success &&
-          items.map((question) => (
-            <ItemQuestion key={question.question_id} {...question} />
-          ))}
+        {status === statusEnum.success && (
+          <>{cards.map((card, i) => renderCard(card, i))}</>
+        )}
       </div>
     </div>
   )
