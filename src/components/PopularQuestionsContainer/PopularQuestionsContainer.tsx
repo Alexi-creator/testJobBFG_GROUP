@@ -16,8 +16,14 @@ import { ItemQuestionSkeleton } from '../ItemQuestion/ItemQuestion.skeleton'
 
 import update from 'immutability-helper'
 
+type PopupClick = MouseEvent & {
+  path: Node[]
+}
+
 export const PopularQuestionsContainer = () => {
   const [cards, setCards] = React.useState<IItem[]>([])
+  const [openOrder, setOpenOrder] = React.useState<number>(-1)
+  const wrapCardsRef = React.useRef<HTMLDivElement>(null)
 
   const [startDate, setStartDate] = React.useState(new Date(2018, 0, 1))
   const [dateIsChange, setDateIsChange] = React.useState<boolean>(false)
@@ -29,6 +35,21 @@ export const PopularQuestionsContainer = () => {
   React.useEffect(() => {
     setCards(items)
   }, [items])
+
+  // close items if click not on item
+  React.useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const _event = event as PopupClick
+
+      if (wrapCardsRef.current && !_event.path.includes(wrapCardsRef.current)) {
+        setOpenOrder(-1)
+      }
+    }
+
+    document.body.addEventListener('click', handleClickOutside)
+
+    return () => document.body.removeEventListener('click', handleClickOutside)
+  }, [])
 
   const changeDate = (currentDate: Date) => {
     setStartDate(currentDate)
@@ -50,9 +71,9 @@ export const PopularQuestionsContainer = () => {
         Number(new Date(startDate).getTime().toString().slice(0, -3))
       )
     )
-    setCards(items)
   }, [])
 
+  // below react dnd
   const moveCard = React.useCallback(
     (dragIndex: number, hoverIndex: number) => {
       setCards((prevCards: IItem[]) =>
@@ -67,16 +88,21 @@ export const PopularQuestionsContainer = () => {
     []
   )
 
-  const renderCard = React.useCallback((question: IItem, index: number) => {
-    return (
-      <ItemQuestion
-        key={question.question_id}
-        {...question}
-        moveCard={moveCard}
-        index={index}
-      />
-    )
-  }, [])
+  const renderCard = React.useCallback(
+    (question: IItem, index: number, openOrder: number) => {
+      return (
+        <ItemQuestion
+          key={question.question_id}
+          {...question}
+          moveCard={moveCard}
+          index={index}
+          openOrder={openOrder}
+          setOpenOrder={setOpenOrder}
+        />
+      )
+    },
+    []
+  )
 
   return (
     <div className={styles.root}>
@@ -105,13 +131,13 @@ export const PopularQuestionsContainer = () => {
           </Button>
         )}
       </div>
-      <div className={styles.list} style={{ width: '100%' }}>
+      <div ref={wrapCardsRef} className={styles.list} style={{ width: '100%' }}>
         {status === statusEnum.loading &&
           [...new Array(5)].map((_, index) => (
             <ItemQuestionSkeleton key={index} viewBox="0 0 550 75" />
           ))}
         {status === statusEnum.success && (
-          <>{cards.map((card, i) => renderCard(card, i))}</>
+          <>{cards.map((card, i) => renderCard(card, i, openOrder))}</>
         )}
       </div>
     </div>

@@ -11,6 +11,8 @@ import { useDrag, useDrop } from 'react-dnd'
 interface CardProps extends IItem {
   moveCard: (dragIndex: number, hoverIndex: number) => void
   index: number
+  openOrder: number
+  setOpenOrder: any
 }
 
 interface DragItem {
@@ -29,8 +31,10 @@ export const ItemQuestion: React.FC<CardProps> = (props) => {
     title,
     moveCard,
     index,
+    openOrder,
+    setOpenOrder,
   } = props
-  const [open, setOpen] = React.useState<boolean>(false)
+
   const dispatch = useDispatch()
 
   const ref = React.useRef<HTMLDivElement>(null)
@@ -126,9 +130,9 @@ export const ItemQuestion: React.FC<CardProps> = (props) => {
       data-handler-id={handlerId}
       className={cn(styles.root, {
         [styles.isAnswered]: is_answered,
-        [styles.open]: open,
+        [styles.open]: openOrder === index,
       })}
-      onClick={() => setOpen((prev) => !prev)}
+      onClick={() => setOpenOrder(index)}
       role="presentation"
     >
       <div className={styles.top}>
@@ -136,10 +140,12 @@ export const ItemQuestion: React.FC<CardProps> = (props) => {
         <div className={styles.rate}>{score}</div>
         <div className={styles.arrows}>
           <IconArrow
+            fill={'#fff'}
             onClick={(e: React.MouseEvent<SVGSVGElement>) => incrementScore(e)}
             className={styles.arrowUp}
           />
           <IconArrow
+            fill={'#fff'}
             onClick={(e: React.MouseEvent<SVGSVGElement>) => decrementScore(e)}
           />
         </div>
